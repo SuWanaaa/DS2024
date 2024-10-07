@@ -71,13 +71,13 @@ int main() {
     A.traverse([](Complex& c) { cout << c << " "; });
     cout << endl;
 
-    // ÖÃÂÒ
+    // ç½®ä¹±
     A.unsort();
     cout << "\nAfter Unsorted Vector: ";
     A.traverse([](Complex& c) { cout << c << " "; });
     cout << endl;
 
-	//²éÕÒ 
+	//æŸ¥æ‰¾ 
     Complex target;
 	target.real=1;
 	target.imag=2; 
@@ -91,7 +91,7 @@ int main() {
         cout << "\n" << target << " not found." << std::endl;
     }
     
-    //²åÈë
+    //æ’å…¥
     int m;
     Complex n;
 	m=0; 
@@ -102,7 +102,7 @@ int main() {
     A.traverse([](Complex& c) { cout << c << " "; });
     cout << endl; 
     
-    //É¾³ı
+    //åˆ é™¤
     int p;
 	p=0;
 	A.remove(p);
@@ -110,14 +110,14 @@ int main() {
     A.traverse([](Complex& c) { cout << c << " "; });
     cout << endl; 
     
-    //Î¨Ò»»¯
+    //å”¯ä¸€åŒ–
     A.uniquify();
     cout << "\nAfter Uniquify: \n";
     A.traverse([](Complex& c) { cout << c << " "; });
     cout << endl; 
     cout<<"\n";
     
-    //ÂÒĞòÇé¿öÏÂ
+    //ä¹±åºæƒ…å†µä¸‹
     cout<<"in unsort insituation:\n";
     Vector<Complex> B(A);
 
@@ -148,7 +148,7 @@ int main() {
     }
     cout<<"\n";
     
-    //Ë³ĞòÇé¿öÏÂ
+    //é¡ºåºæƒ…å†µä¸‹
     cout<<"in sort insituation:\n";
 	Vector<Complex> C(A);
 	Vector<Complex> D(A);
@@ -180,7 +180,7 @@ int main() {
     }
     cout<<"\n";
     
-    //ÄæĞòÇé¿öÏÂ
+    //é€†åºæƒ…å†µä¸‹
     cout<<"in reverse insituation:\n";
     A.reverse();
     Vector<Complex> E(A);
