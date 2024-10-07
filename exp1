@@ -210,7 +210,8 @@ int main() {
         cout << "Both  took the same amount of time." << endl;
     }
     cout<<"\n";
-    
+
+    //顺序向量区间查找 
     double m1 = 10.0, m2 = 50.0; 
 	Vector<Complex> found;
 
