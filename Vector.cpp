@@ -1,5 +1,6 @@
 typedef int Rank;
 #include <cstdlib> 
+#include <algorithm> 
 #define DEFAULT_CAPACITY 3
 
 template <typename T> 
@@ -12,19 +13,22 @@ protected:
     void copyFrom(T const* A, Rank lo, Rank hi);
     void expand();
     void shrink();
-    bool bubble(Rank lo, Rank hi);
-    void bubbleSort(Rank lo, Rank hi);
+
     Rank max(Rank lo, Rank hi);
     void selectionSort(Rank lo, Rank hi);
-    void merge(Rank lo, Rank mi, Rank hi);
-    void mergeSort(Rank lo, Rank hi);
+
     Rank partition(Rank lo, Rank hi);
     void quickSort(Rank lo, Rank hi);
     void heapSort(Rank lo, Rank hi);
     void heapify(Rank n, Rank i); // 辅助函数用于heapSort
 
 public:
-    Vector(int c = DEFAULT_CAPACITY, int s = 0, T v = 0) {
+	void reverse(); 
+    bool bubble(Rank lo, Rank hi);
+    void bubbleSort(Rank lo, Rank hi);
+	void merge(Rank lo, Rank mi, Rank hi);
+    void mergeSort(Rank lo, Rank hi);
+	Vector(int c = DEFAULT_CAPACITY, int s = 0, T v = 0) {
         _elem = new T[_capacity = c];
         for (_size = 0; _size < s; _elem[_size++] = v);
     }
@@ -61,9 +65,19 @@ public:
     template <typename VST> void traverse(VST&);
 };
 
+//逆序排列 
+template <typename T>
+void Vector<T>::reverse() 
+{
+    for (Rank i = 0; i < _size / 2; ++i) {
+        std::swap(_elem[i], _elem[_size - 1 - i]);
+    }
+}
+
 // 拷贝函数
 template <typename T>
-void Vector<T>::copyFrom(T const* A, Rank lo, Rank hi) {
+void Vector<T>::copyFrom(T const* A, Rank lo, Rank hi) 
+{
     _elem = new T[_capacity = 2 * (hi - lo)];
     _size = 0;
     while (lo < hi) {
@@ -73,7 +87,8 @@ void Vector<T>::copyFrom(T const* A, Rank lo, Rank hi) {
 
 // 扩容
 template <typename T>
-void Vector<T>::expand() {
+void Vector<T>::expand() 
+{
     if (_size < _capacity) return;
     if (_capacity < DEFAULT_CAPACITY) _capacity = DEFAULT_CAPACITY;
     T* oldElem = _elem;
@@ -84,7 +99,8 @@ void Vector<T>::expand() {
 
 // 缩容
 template <typename T>
-void Vector<T>::shrink() {
+void Vector<T>::shrink() 
+{
     if (_capacity < (DEFAULT_CAPACITY << 1)) return;
     if (_size << 2 > _capacity) return;
     T* oldElem = _elem;
@@ -95,12 +111,13 @@ void Vector<T>::shrink() {
 
 // 冒泡排序中的一趟冒泡
 template <typename T>
-bool Vector<T>::bubble(Rank lo, Rank hi) {
+bool Vector<T>::bubble(Rank lo, Rank hi) 
+{
     bool sorted = true;
     while (++lo < hi) {
         if (_elem[lo - 1] > _elem[lo]) {
             sorted = false;
-			swap(_elem[lo - 1], _elem[lo]);      
+			std::swap(_elem[lo - 1], _elem[lo]);      
         }
     }
     return sorted;
@@ -108,7 +125,8 @@ bool Vector<T>::bubble(Rank lo, Rank hi) {
 
 // 冒泡排序
 template <typename T>
-void Vector<T>::bubbleSort(Rank lo, Rank hi) {
+void Vector<T>::bubbleSort(Rank lo, Rank hi) 
+{
     while (!bubble(lo, hi--));
 }
 
@@ -127,7 +145,8 @@ Rank Vector<T>::max(Rank lo, Rank hi)
 
 // 选择排序
 template <typename T>
-void Vector<T>::selectionSort(Rank lo, Rank hi) {
+void Vector<T>::selectionSort(Rank lo, Rank hi) 
+{
     for (Rank i = lo; i < hi - 1; ++i) {
         Rank minIndex = i;
         for (Rank j = i + 1; j < hi; ++j) {
@@ -143,7 +162,8 @@ void Vector<T>::selectionSort(Rank lo, Rank hi) {
 
 // 归并操作
 template <typename T>
-void Vector<T>::merge(Rank lo, Rank mi, Rank hi) {
+void Vector<T>::merge(Rank lo, Rank mi, Rank hi) 
+{
     T* A = _elem + lo;
     int lb = mi - lo;
     T* B = new T[lb];
@@ -152,7 +172,8 @@ void Vector<T>::merge(Rank lo, Rank mi, Rank hi) {
     int lc = hi - mi;
     T* C = _elem + mi;
 
-    for (Rank i = 0, j = 0, k = 0; (j < lb) || (k < lc);) {
+    for (Rank i = 0, j = 0, k = 0; (j < lb) || (k < lc);) 
+    {
         if ((j < lb) && (!(k < lc) || (B[j] <= C[k]))) A[i++] = B[j++];
         if ((k < lc) && (!(j < lb) || (C[k] <= B[j]))) A[i++] = C[k++];
     }
@@ -161,7 +182,8 @@ void Vector<T>::merge(Rank lo, Rank mi, Rank hi) {
 
 // 归并排序
 template <typename T>
-void Vector<T>::mergeSort(Rank lo, Rank hi) {
+void Vector<T>::mergeSort(Rank lo, Rank hi) 
+{
     if (hi - lo < 2) return;
     Rank mi = (lo + hi) / 2;
     mergeSort(lo, mi);
@@ -171,7 +193,8 @@ void Vector<T>::mergeSort(Rank lo, Rank hi) {
 
 // 快速排序的划分函数
 template <typename T>
-Rank Vector<T>::partition(Rank lo, Rank hi) {
+Rank Vector<T>::partition(Rank lo, Rank hi) 
+{
     T pivot = _elem[lo]; // 以第一个元素为基准
     while (lo < hi) {
         while (lo < hi && _elem[hi] >= pivot) hi--; // 从右向左找到第一个小于 pivot 的元素
@@ -185,7 +208,8 @@ Rank Vector<T>::partition(Rank lo, Rank hi) {
 
 // 快速排序
 template <typename T>
-void Vector<T>::quickSort(Rank lo, Rank hi) {
+void Vector<T>::quickSort(Rank lo, Rank hi) 
+{
     if (hi - lo < 2) return;
     Rank pivotPos = partition(lo, hi - 1);
     quickSort(lo, pivotPos);
@@ -194,7 +218,8 @@ void Vector<T>::quickSort(Rank lo, Rank hi) {
 
 // 堆排序辅助函数：堆调整
 template <typename T>
-void Vector<T>::heapify(Rank n, Rank i) {
+void Vector<T>::heapify(Rank n, Rank i) 
+{
     Rank largest = i;
     Rank left = 2 * i + 1;
     Rank right = 2 * i + 2;
@@ -210,7 +235,8 @@ void Vector<T>::heapify(Rank n, Rank i) {
 
 // 堆排序
 template <typename T>
-void Vector<T>::heapSort(Rank lo, Rank hi) {
+void Vector<T>::heapSort(Rank lo, Rank hi) 
+{
     Rank n = hi - lo;
     for (Rank i = n / 2 - 1; i >= 0; i--) {
         heapify(n, i);
@@ -223,7 +249,8 @@ void Vector<T>::heapSort(Rank lo, Rank hi) {
 
 // 计算逆序对数量
 template <typename T>
-int Vector<T>::disordered() const {
+int Vector<T>::disordered() const 
+{
     int n = 0;
     for (int i = 1; i < _size; i++) {
         if (_elem[i - 1] > _elem[i]) n++;
@@ -233,14 +260,16 @@ int Vector<T>::disordered() const {
 
 // 查找元素
 template <typename T>
-Rank Vector<T>::find(T const& e, Rank lo, Rank hi) const {
+Rank Vector<T>::find(T const& e, Rank lo, Rank hi) const 
+{
     while ((lo < hi--) && (e != _elem[hi]));
     return hi;
 }
 
 // 二分查找
 template <typename T>
-Rank Vector<T>::search(T const& e, Rank lo, Rank hi) const {
+Rank Vector<T>::search(T const& e, Rank lo, Rank hi) const 
+{
     while ((lo < hi--) && (_elem[hi] != e));
     return hi;
 }
@@ -251,7 +280,8 @@ T& Vector<T>::operator[](Rank r) const { return _elem[r]; }
 
 // 重载赋值运算符
 template <typename T>
-Vector<T>& Vector<T>::operator=(Vector<T> const& V) {
+Vector<T>& Vector<T>::operator=(Vector<T> const& V) 
+{
     if (_elem) delete[] _elem;
     copyFrom(V._elem, 0, V.size());
     return *this;
@@ -259,7 +289,8 @@ Vector<T>& Vector<T>::operator=(Vector<T> const& V) {
 
 // 删除指定位置的元素
 template <typename T>
-T Vector<T>::remove(Rank r) {
+T Vector<T>::remove(Rank r) 
+{
     T e = _elem[r];
     remove(r, r + 1);
     return e;
@@ -267,7 +298,8 @@ T Vector<T>::remove(Rank r) {
 
 // 删除区间内的元素
 template <typename T>
-int Vector<T>::remove(Rank lo, Rank hi) {
+int Vector<T>::remove(Rank lo, Rank hi) 
+{
     if (lo == hi) return 0;
     while (hi < _size) _elem[lo++] = _elem[hi++];
     _size = lo;
@@ -277,7 +309,8 @@ int Vector<T>::remove(Rank lo, Rank hi) {
 
 // 插入元素
 template <typename T>
-Rank Vector<T>::insert(Rank r, T const& e) {
+Rank Vector<T>::insert(Rank r, T const& e) 
+{
     expand();
     for (int i = _size; i > r; i--) _elem[i] = _elem[i - 1];
     _elem[r] = e;
@@ -287,7 +320,8 @@ Rank Vector<T>::insert(Rank r, T const& e) {
 
 // 排序函数
 template <typename T>
-void Vector<T>::sort(Rank lo, Rank hi) {
+void Vector<T>::sort(Rank lo, Rank hi) 
+{
     switch (rand() % 5) {
         case 1: bubbleSort(lo, hi); break;
         case 2: selectionSort(lo, hi); break;
@@ -299,16 +333,18 @@ void Vector<T>::sort(Rank lo, Rank hi) {
 
 // 随机打乱数组
 template <typename T>
-void Vector<T>::unsort(Rank lo, Rank hi) {
+void Vector<T>::unsort(Rank lo, Rank hi) 
+{
     T* V = _elem + lo;
     for (Rank i = hi - lo; i > 0; i--) {
-        swap(V[i - 1], V[rand() % i]);
+        std::swap(V[i - 1], V[rand() % i]);
     }
 }
 
 // 删除重复元素
 template <typename T>
-int Vector<T>::deduplicate() {
+int Vector<T>::deduplicate() 
+{
     int oldSize = _size;
     Rank i = 1;
     while (i < _size) {
@@ -319,7 +355,8 @@ int Vector<T>::deduplicate() {
 
 // 去重（有序向量）
 template <typename T>
-int Vector<T>::uniquify() {
+int Vector<T>::uniquify() 
+{
     Rank i = 0, j = 0;
     while (++j < _size) {
         if (_elem[i] != _elem[j]) _elem[++i] = _elem[j];
@@ -331,13 +368,15 @@ int Vector<T>::uniquify() {
 
 // 遍历函数（函数指针）
 template <typename T>
-void Vector<T>::traverse(void(*visit)(T&)) {
+void Vector<T>::traverse(void(*visit)(T&)) 
+{
     for (int i = 0; i < _size; i++) visit(_elem[i]);
 }
 
 // 遍历函数（函数对象）
 template <typename T>
 template <typename VST>
-void Vector<T>::traverse(VST& visit) {
+void Vector<T>::traverse(VST& visit) 
+{
     for (int i = 0; i < _size; i++) visit(_elem[i]);
 }
